@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 26
-  productGUID: f4c1e128a5a1e0248ad20898dd6c6a52
+  productGUID: 4a42c7d7e0fa57a48b6e0dd6c59253fa
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: 3DGR-2025 Project
+  productName: MovingPieces
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -682,14 +682,14 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: 3DGR-2025 Project
+  metroPackageName: MovingPieces
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: 3DGR-2025 Project
+  metroApplicationDescription: MovingPieces
   wsaImages: {}
   metroTileShortName: 
   metroTileShowName: 0
@@ -759,10 +759,10 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 4a1e6d43-e4fe-4c80-a575-8d6e8ee1a8d0
+  cloudProjectId: 1195aa9d-de13-413e-b47d-4e3a2846be31
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 3DGR-2025 Project 2025-06-14_18-17-40
+  projectName: MovingPieces
   organizationId: owl707
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
