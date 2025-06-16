@@ -76,7 +76,7 @@ public class PlayerMoveScript : MonoBehaviour
         verticalInput = Input.GetAxis("Vertical");
 
         // Check if Grounded
-        if (Physics.OverlapSphere(jumpCheckPosition.position, 0.05f, LayerMask.GetMask("Ground")).Length > 0)
+        if (Physics.OverlapSphere(jumpCheckPosition.position, 0.2f, LayerMask.GetMask("Ground")).Length > 0)
         {
             isGrounded = true;
         }
@@ -116,10 +116,11 @@ public class PlayerMoveScript : MonoBehaviour
     void FixedUpdate()
     {
         MovePlayer();
+        Jump();
         if (!isGrounded)
         {
             FallMultiplier();
-        }   
+        }  
     }
 
     private void StateHandler()
@@ -164,26 +165,25 @@ public class PlayerMoveScript : MonoBehaviour
     {
         // Calculate player movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        gravity.gravityScale = 1;
-
-        // Player is on a slope
-        if (OnSlope())
-        {
-            rb.AddForce(GetSlopeMoveDirection() * groundAcceleration * 10f, ForceMode.Force);
-            gravity.gravityScale = 0;
-        }
+        gravity.gravityScale = 2;
 
         // Player is grounded
-        else if (isGrounded)
+        if (isGrounded)
         {
-            rb.AddForce(moveDirection.normalized * groundAcceleration * 10f, ForceMode.Force);
-            rb.drag = groundDrag;
-            if (jumpBufferCounter > 0f)
+            // Player is on a slope
+            if (OnSlope())
             {
-                rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-                //jumpPressed = false;
-                rb.AddForce(new Vector3(0f, jumpForce, 0f), ForceMode.Impulse);
+                rb.AddForce(GetSlopeMoveDirection() * groundAcceleration * 10f, ForceMode.Force);
+                gravity.gravityScale = 0;
+                rb.drag = groundDrag;
             }
+            else
+            {
+                rb.AddForce(moveDirection.normalized * groundAcceleration * 10f, ForceMode.Force);
+                rb.drag = groundDrag;
+                gravity.gravityScale = 2f;
+            }
+            
         }
         // Player is in the air
         else if (!isGrounded) 
@@ -192,6 +192,18 @@ public class PlayerMoveScript : MonoBehaviour
             rb.drag = airDrag;
         }
 
+    }
+
+    private void Jump()
+    {
+        if (isGrounded)
+        {
+            if (jumpBufferCounter > 0f)
+            {
+                rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+                rb.AddForce(new Vector3(0f, jumpForce, 0f), ForceMode.Impulse);
+            }
+        }
     }
 
     private void SpeedControl()
