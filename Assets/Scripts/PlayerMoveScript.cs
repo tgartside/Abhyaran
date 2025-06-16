@@ -13,10 +13,15 @@ public class PlayerMoveScript : MonoBehaviour
     public float sprintSpeed;
     public float groundAcceleration;
     public float groundDrag;
+    public float moveSpeed;
+
     public float airWalkSpeed;
     public float airSprintSpeed;
     public float airAcceleration;
     public float airDrag;
+
+    public float wallrunSpeed;
+
     public Transform orientation;
 
     private float horizontalInput;
@@ -56,8 +61,11 @@ public class PlayerMoveScript : MonoBehaviour
         sprintingGround,
         walkingAir,
         sprintingAir,
-        crouching
+        crouching,
+        wallrunning
     }
+
+    public bool wallrunning;
 
     // Start is called before the first frame update
     void Start()
@@ -125,39 +133,46 @@ public class PlayerMoveScript : MonoBehaviour
 
     private void StateHandler()
     {
+        // Wallrunning
+        if (wallrunning)
+        {
+            state = MovementState.wallrunning;
+            moveSpeed = wallrunSpeed;
+        }
+
         // Crouching
-        if (Input.GetKey(crouchKey))
+        else if (Input.GetKey(crouchKey))
         {
             state = MovementState.crouching;
-            groundAcceleration = crouchSpeed;
+            moveSpeed = crouchSpeed;
         }
 
         // Sprinting on ground
         else if (isGrounded && Input.GetKey(sprintKey))
         {
             state = MovementState.sprintingGround;
-            groundAcceleration = sprintSpeed;
+            moveSpeed = sprintSpeed;
         }
 
         // Walking on ground
         else if (isGrounded)
         {
             state = MovementState.walkingGround;
-            groundAcceleration = walkSpeed;
+            moveSpeed = walkSpeed;
         }
 
         // Sprintng in air
         else if(Input.GetKey(sprintKey))
         {
             state = MovementState.sprintingAir;
-            airAcceleration = airSprintSpeed;
+            moveSpeed = airSprintSpeed;
         }
 
         // Walking in air
         else
         {
             state = MovementState.walkingAir;
-            airAcceleration = airWalkSpeed;
+            moveSpeed = airWalkSpeed;
         }
     }
 
@@ -173,13 +188,16 @@ public class PlayerMoveScript : MonoBehaviour
             // Player is on a slope
             if (OnSlope())
             {
-                rb.AddForce(GetSlopeMoveDirection() * groundAcceleration * 10f, ForceMode.Force);
+                //rb.AddForce(GetSlopeMoveDirection() * groundAcceleration * 10f, ForceMode.Force);
+                rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
+
                 gravity.gravityScale = 0;
                 rb.drag = groundDrag;
             }
             else
             {
-                rb.AddForce(moveDirection.normalized * groundAcceleration * 10f, ForceMode.Force);
+                //rb.AddForce(moveDirection.normalized * groundAcceleration * 10f, ForceMode.Force);
+                rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
                 rb.drag = groundDrag;
                 gravity.gravityScale = 2f;
             }
@@ -188,7 +206,8 @@ public class PlayerMoveScript : MonoBehaviour
         // Player is in the air
         else if (!isGrounded) 
         {
-            rb.AddForce(moveDirection.normalized * airAcceleration * 10f, ForceMode.Force);
+            //rb.AddForce(moveDirection.normalized * airAcceleration * 10f, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
             rb.drag = airDrag;
         }
 
