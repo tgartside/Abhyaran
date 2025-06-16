@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerMoveScript : MonoBehaviour
 {
 
-    [Header("Movement")]
+    [Header("Movement Variables")]
     public float maxSpeed;
     public float walkSpeed;
     public float sprintSpeed;
@@ -33,8 +33,19 @@ public class PlayerMoveScript : MonoBehaviour
     public CustomGravity gravity;
     public Transform jumpCheckPosition;
 
+    [Header("Crouching Variables")]
+    public float crouchSpeed;
+    public float crouchYScale;
+    private float startYScale;
+
     [Header("Keybinds")]
     public KeyCode sprintKey = KeyCode.LeftShift;
+    public KeyCode crouchKey = KeyCode.LeftControl;
+
+    [Header("Slope Handling")]
+    public float playerHeight;
+    public float maxSlopeAngle;
+    private RaycastHit slopeHit;
 
     private bool isGrounded = true;
 
@@ -44,7 +55,8 @@ public class PlayerMoveScript : MonoBehaviour
         walkingGround,
         sprintingGround,
         walkingAir,
-        sprintingAir
+        sprintingAir,
+        crouching
     }
 
     // Start is called before the first frame update
@@ -53,6 +65,8 @@ public class PlayerMoveScript : MonoBehaviour
         gravity = GetComponent<CustomGravity>();
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+
+        startYScale = transform.localScale.y;
     }
 
     // Update is called once per frame
@@ -61,6 +75,7 @@ public class PlayerMoveScript : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
+        // Check if Grounded
         if (Physics.OverlapSphere(jumpCheckPosition.position, 0.05f, LayerMask.GetMask("Ground")).Length > 0)
         {
             isGrounded = true;
@@ -70,6 +85,7 @@ public class PlayerMoveScript : MonoBehaviour
             isGrounded = false;
         }
 
+        // Start jump buffer
         if (Input.GetButtonDown("Jump"))
         {
             jumpBufferCounter = jumpBufferTime;
@@ -77,6 +93,19 @@ public class PlayerMoveScript : MonoBehaviour
         else
         {
             jumpBufferCounter -= Time.deltaTime;
+        }
+
+        // Start crouching
+        if (Input.GetKeyDown(crouchKey))
+        {
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        }
+
+        // Stop crouching
+        if (Input.GetKeyUp(crouchKey))
+        {
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
 
         SpeedControl();
@@ -90,14 +119,20 @@ public class PlayerMoveScript : MonoBehaviour
         if (!isGrounded)
         {
             FallMultiplier();
-        }
-        
+        }   
     }
 
     private void StateHandler()
     {
+        // Crouching
+        if (Input.GetKey(crouchKey))
+        {
+            state = MovementState.crouching;
+            groundAcceleration = crouchSpeed;
+        }
+
         // Sprinting on ground
-        if(isGrounded && Input.GetKey(sprintKey))
+        else if (isGrounded && Input.GetKey(sprintKey))
         {
             state = MovementState.sprintingGround;
             groundAcceleration = sprintSpeed;
@@ -127,10 +162,19 @@ public class PlayerMoveScript : MonoBehaviour
 
     private void MovePlayer()
     {
+        // Calculate player movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        gravity.gravityScale = 1;
+
+        // Player is on a slope
+        if (OnSlope())
+        {
+            rb.AddForce(GetSlopeMoveDirection() * groundAcceleration * 10f, ForceMode.Force);
+            gravity.gravityScale = 0;
+        }
 
         // Player is grounded
-        if (isGrounded)
+        else if (isGrounded)
         {
             rb.AddForce(moveDirection.normalized * groundAcceleration * 10f, ForceMode.Force);
             rb.drag = groundDrag;
@@ -142,11 +186,12 @@ public class PlayerMoveScript : MonoBehaviour
             }
         }
         // Player is in the air
-        else
+        else if (!isGrounded) 
         {
             rb.AddForce(moveDirection.normalized * airAcceleration * 10f, ForceMode.Force);
             rb.drag = airDrag;
         }
+
     }
 
     private void SpeedControl()
@@ -175,6 +220,22 @@ public class PlayerMoveScript : MonoBehaviour
         {
             gravity.gravityScale = 2f;
         }
+    }
+
+    private bool OnSlope()
+    {
+        if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return angle < maxSlopeAngle && angle != 0;
+        }
+
+        return false;
+    }
+
+    private Vector3 GetSlopeMoveDirection()
+    {
+        return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
 }
