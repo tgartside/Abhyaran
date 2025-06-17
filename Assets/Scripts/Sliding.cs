@@ -9,6 +9,7 @@ public class Sliding : MonoBehaviour
     public Transform playerObj;
     private Rigidbody rb;
     private PlayerMoveScript pm;
+    public PlayerCam cam;
 
     [Header("Sliding Variables")]
     public float maxSlideTime;
@@ -63,6 +64,7 @@ public class Sliding : MonoBehaviour
         playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z);
         rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
         slideTimer = maxSlideTime;
+        cam.DoFov(90f);
     }
 
     private void SlidingMovement()
@@ -93,5 +95,6 @@ public class Sliding : MonoBehaviour
     {
         pm.sliding = false;
         playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
+        cam.DoFov(80f);
     }
 }

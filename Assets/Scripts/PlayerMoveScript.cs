@@ -15,8 +15,8 @@ public class PlayerMoveScript : MonoBehaviour
     public float groundDrag;
     public float moveSpeed;
 
-    private float desiredMoveSpeed;
-    private float lastDesiredMoveSpeed;
+    public float desiredMoveSpeed;
+    public float lastDesiredMoveSpeed;
 
     public float airWalkSpeed;
     public float airSprintSpeed;
@@ -42,9 +42,10 @@ public class PlayerMoveScript : MonoBehaviour
     public float fallMultiplier = 5f;
     public float lowJumpFallMultiplier = 7f;
     public float jumpBufferTime = 0.2f;
-    public float jumpBufferCounter;
+    private float jumpBufferCounter;
     public CustomGravity gravity;
     public Transform jumpCheckPosition;
+    public bool isGrounded = true;
 
     [Header("Crouching Variables")]
     public float crouchSpeed;
@@ -59,8 +60,6 @@ public class PlayerMoveScript : MonoBehaviour
     public float playerHeight;
     public float maxSlopeAngle;
     private RaycastHit slopeHit;
-
-    private bool isGrounded = true;
 
     public MovementState state;
     public enum MovementState
@@ -145,7 +144,7 @@ public class PlayerMoveScript : MonoBehaviour
     {
         MovePlayer();
         Jump();
-        if (!isGrounded)
+        if (!isGrounded && !wallrunning)
         {
             FallMultiplier();
         }  
@@ -157,7 +156,7 @@ public class PlayerMoveScript : MonoBehaviour
         if (wallrunning)
         {
             state = MovementState.wallrunning;
-            moveSpeed = wallrunSpeed;
+            desiredMoveSpeed = wallrunSpeed;
         }
 
         // Sliding
@@ -211,7 +210,7 @@ public class PlayerMoveScript : MonoBehaviour
         }
 
         // Check if desiredMoveSpeed has changed drastically
-        if(Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 6f && moveSpeed != 0)
+        if(Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 12f && moveSpeed != 0)
         {
             StopAllCoroutines();
             StartCoroutine(SmoothlyLerpMoveSpeed());
@@ -226,7 +225,7 @@ public class PlayerMoveScript : MonoBehaviour
 
     }
 
-    private IEnumerator SmoothlyLerpMoveSpeed()
+    public IEnumerator SmoothlyLerpMoveSpeed()
     {
         // Smoothly lerp movementSpeed to desired value
         float time = 0;
@@ -275,7 +274,6 @@ public class PlayerMoveScript : MonoBehaviour
             // Player is on a slope
             if (OnSlope())
             {
-                //rb.AddForce(GetSlopeMoveDirection() * groundAcceleration * 10f, ForceMode.Force);
                 rb.AddForce(GetSlopeMoveDirection(moveDirection) * moveSpeed * 10f, ForceMode.Force);
 
                 gravity.gravityScale = 0;
@@ -283,7 +281,6 @@ public class PlayerMoveScript : MonoBehaviour
             }
             else
             {
-                //rb.AddForce(moveDirection.normalized * groundAcceleration * 10f, ForceMode.Force);
                 rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
                 rb.drag = groundDrag;
                 gravity.gravityScale = 2f;
@@ -293,7 +290,6 @@ public class PlayerMoveScript : MonoBehaviour
         // Player is in the air
         else if (!isGrounded) 
         {
-            //rb.AddForce(moveDirection.normalized * airAcceleration * 10f, ForceMode.Force);
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
             rb.drag = airDrag;
         }
