@@ -13,6 +13,11 @@ public class PlayerMoveScript : MonoBehaviour
     public float sprintSpeed;
     public float groundAcceleration;
     public float groundDrag;
+    public float moveSpeed;
+
+    public float desiredMoveSpeed;
+    public float lastDesiredMoveSpeed;
+
     public float airWalkSpeed;
     public float airSprintSpeed;
     public float airAcceleration;
@@ -29,9 +34,10 @@ public class PlayerMoveScript : MonoBehaviour
     public float fallMultiplier = 5f;
     public float lowJumpFallMultiplier = 7f;
     public float jumpBufferTime = 0.2f;
-    public float jumpBufferCounter;
+    private float jumpBufferCounter;
     public CustomGravity gravity;
     public Transform jumpCheckPosition;
+    public bool isGrounded = true;
 
     [Header("Crouching Variables")]
     public float crouchSpeed;
@@ -47,8 +53,6 @@ public class PlayerMoveScript : MonoBehaviour
     public float maxSlopeAngle;
     private RaycastHit slopeHit;
 
-    private bool isGrounded = true;
-
     public MovementState state;
     public enum MovementState
     {
@@ -58,6 +62,10 @@ public class PlayerMoveScript : MonoBehaviour
         sprintingAir,
         crouching
     }
+
+    public bool sprinting;
+    public bool sliding;
+    public bool wallrunning;
 
     // Start is called before the first frame update
     void Start()
@@ -96,7 +104,7 @@ public class PlayerMoveScript : MonoBehaviour
         }
 
         // Start crouching
-        if (Input.GetKeyDown(crouchKey))
+        if (Input.GetKeyDown(crouchKey) && !sprinting)
         {
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
@@ -108,6 +116,15 @@ public class PlayerMoveScript : MonoBehaviour
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
 
+        if (state == MovementState.sprintingGround)
+        {
+            sprinting = true;
+        }
+        else
+        {
+            sprinting = false;
+        }
+
         SpeedControl();
         StateHandler();
 
@@ -117,7 +134,7 @@ public class PlayerMoveScript : MonoBehaviour
     {
         MovePlayer();
         Jump();
-        if (!isGrounded)
+        if (!isGrounded && !wallrunning)
         {
             FallMultiplier();
         }  
@@ -125,6 +142,28 @@ public class PlayerMoveScript : MonoBehaviour
 
     private void StateHandler()
     {
+        // Wallrunning
+        if (wallrunning)
+        {
+            state = MovementState.wallrunning;
+            desiredMoveSpeed = wallrunSpeed;
+        }
+
+        // Sliding
+        else if (sliding)
+        {
+            state = MovementState.sliding;
+
+            if(OnSlope() && rb.velocity.y < 0.1f)
+            {
+                desiredMoveSpeed = slideSpeed;
+            }
+
+            else
+            {
+                desiredMoveSpeed = sprintSpeed;
+            }
+        }
         // Crouching
         if (Input.GetKey(crouchKey))
         {
@@ -159,6 +198,58 @@ public class PlayerMoveScript : MonoBehaviour
             state = MovementState.walkingAir;
             airAcceleration = airWalkSpeed;
         }
+
+        // Check if desiredMoveSpeed has changed drastically
+        if(Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 12f && moveSpeed != 0)
+        {
+            StopAllCoroutines();
+            StartCoroutine(SmoothlyLerpMoveSpeed());
+        }
+
+        else
+        {
+            moveSpeed = desiredMoveSpeed;
+        }
+
+        lastDesiredMoveSpeed = desiredMoveSpeed;
+
+    }
+
+    public IEnumerator SmoothlyLerpMoveSpeed()
+    {
+        // Smoothly lerp movementSpeed to desired value
+        float time = 0;
+        float diff = Mathf.Abs(desiredMoveSpeed - moveSpeed);
+        float startValue = moveSpeed;
+
+        while (time < diff)
+        {
+            if (!Input.anyKey)
+            {
+                time = diff;
+                rb.velocity = Vector3.zero;
+                moveSpeed = 0;
+
+            }
+            else
+            {
+                moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / diff);
+
+                if (OnSlope())
+                {
+                    float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
+                    float slopeAngleIncrease = 1 + (slopeAngle / 90f);
+
+                    time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
+                }
+                else
+                {
+                    time += Time.deltaTime * speedIncreaseMultiplier;
+                }
+                yield return null;
+            }
+        }
+        moveSpeed = desiredMoveSpeed;
     }
 
     private void MovePlayer()
@@ -173,13 +264,14 @@ public class PlayerMoveScript : MonoBehaviour
             // Player is on a slope
             if (OnSlope())
             {
-                rb.AddForce(GetSlopeMoveDirection() * groundAcceleration * 10f, ForceMode.Force);
+                rb.AddForce(GetSlopeMoveDirection(moveDirection) * moveSpeed * 10f, ForceMode.Force);
+
                 gravity.gravityScale = 0;
                 rb.drag = groundDrag;
             }
             else
             {
-                rb.AddForce(moveDirection.normalized * groundAcceleration * 10f, ForceMode.Force);
+                rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
                 rb.drag = groundDrag;
                 gravity.gravityScale = 2f;
             }
@@ -188,7 +280,7 @@ public class PlayerMoveScript : MonoBehaviour
         // Player is in the air
         else if (!isGrounded) 
         {
-            rb.AddForce(moveDirection.normalized * airAcceleration * 10f, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
             rb.drag = airDrag;
         }
 
