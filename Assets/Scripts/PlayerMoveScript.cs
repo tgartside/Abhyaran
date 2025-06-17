@@ -22,15 +22,7 @@ public class PlayerMoveScript : MonoBehaviour
     public float airSprintSpeed;
     public float airAcceleration;
     public float airDrag;
-
-    public float wallrunSpeed;
-
     public Transform orientation;
-
-    [Header("Sliding Variables")]
-    public float slideSpeed;
-    public float speedIncreaseMultiplier;
-    public float slopeIncreaseMultiplier;
 
     private float horizontalInput;
     private float verticalInput;
@@ -68,9 +60,7 @@ public class PlayerMoveScript : MonoBehaviour
         sprintingGround,
         walkingAir,
         sprintingAir,
-        crouching,
-        sliding,
-        wallrunning
+        crouching
     }
 
     public bool sprinting;
@@ -175,38 +165,38 @@ public class PlayerMoveScript : MonoBehaviour
             }
         }
         // Crouching
-        else if (Input.GetKey(crouchKey))
+        if (Input.GetKey(crouchKey))
         {
             state = MovementState.crouching;
-            desiredMoveSpeed = crouchSpeed;
+            groundAcceleration = crouchSpeed;
         }
 
         // Sprinting on ground
         else if (isGrounded && Input.GetKey(sprintKey))
         {
             state = MovementState.sprintingGround;
-            desiredMoveSpeed = sprintSpeed;
+            groundAcceleration = sprintSpeed;
         }
 
         // Walking on ground
         else if (isGrounded)
         {
             state = MovementState.walkingGround;
-            desiredMoveSpeed = walkSpeed;
+            groundAcceleration = walkSpeed;
         }
 
         // Sprintng in air
         else if(Input.GetKey(sprintKey))
         {
             state = MovementState.sprintingAir;
-            desiredMoveSpeed = airSprintSpeed;
+            airAcceleration = airSprintSpeed;
         }
 
         // Walking in air
         else
         {
             state = MovementState.walkingAir;
-            desiredMoveSpeed = airWalkSpeed;
+            airAcceleration = airWalkSpeed;
         }
 
         // Check if desiredMoveSpeed has changed drastically
@@ -336,7 +326,7 @@ public class PlayerMoveScript : MonoBehaviour
         }
     }
 
-    public bool OnSlope()
+    private bool OnSlope()
     {
         if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
         {
@@ -347,9 +337,9 @@ public class PlayerMoveScript : MonoBehaviour
         return false;
     }
 
-    public Vector3 GetSlopeMoveDirection(Vector3 direction)
+    private Vector3 GetSlopeMoveDirection()
     {
-        return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
+        return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
 }
