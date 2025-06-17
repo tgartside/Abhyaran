@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerCam : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class PlayerCam : MonoBehaviour
     public float sensY;
 
     public Transform orientation;
+    public Transform camHolder;
 
     public Rigidbody rb;
 
@@ -44,9 +46,19 @@ public class PlayerCam : MonoBehaviour
         rotHelper.rotation = Quaternion.Euler(xRotation, yRotation, 0);
 
         // rotate cam and orientation
-        transform.rotation = Quaternion.Euler(Mathf.SmoothDampAngle(transform.eulerAngles.x, rotHelper.eulerAngles.x, ref xRotVel, smoothTime),
+        camHolder.rotation = Quaternion.Euler(Mathf.SmoothDampAngle(transform.eulerAngles.x, rotHelper.eulerAngles.x, ref xRotVel, smoothTime),
                                                 Mathf.SmoothDampAngle(transform.eulerAngles.y, rotHelper.eulerAngles.y, ref yRotVel, smoothTime), 0f);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
         rb.rotation = Quaternion.Euler(0, yRotation, 0);
+    }
+
+    public void DoFov(float endValue)
+    {
+        GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
+    }
+
+    public void DoTilt(float zTilt)
+    {
+        transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
     }
 }
