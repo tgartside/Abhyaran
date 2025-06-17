@@ -6367,8 +6367,8 @@ MonoBehaviour:
   airDrag: 1
   wallrunSpeed: 8
   orientation: {fileID: 1109772024}
-  slideSpeed: 30
-  speedIncreaseMultiplier: 1.5
+  slideSpeed: 50
+  speedIncreaseMultiplier: 10
   slopeIncreaseMultiplier: 2.5
   jumpForce: 15
   fallMultiplier: 4
@@ -6380,10 +6380,11 @@ MonoBehaviour:
   crouchSpeed: 3
   crouchYScale: 0.8
   sprintKey: 304
-  crouchKey: 99
+  crouchKey: 306
   playerHeight: 2
   maxSlopeAngle: 60
   state: 0
+  sprinting: 0
   sliding: 0
   wallrunning: 0
 --- !u!114 &1741836706

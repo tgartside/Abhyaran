@@ -74,6 +74,7 @@ public class PlayerMoveScript : MonoBehaviour
         wallrunning
     }
 
+    public bool sprinting;
     public bool sliding;
     public bool wallrunning;
 
@@ -114,7 +115,7 @@ public class PlayerMoveScript : MonoBehaviour
         }
 
         // Start crouching
-        if (Input.GetKeyDown(crouchKey))
+        if (Input.GetKeyDown(crouchKey) && !sprinting)
         {
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
@@ -124,6 +125,15 @@ public class PlayerMoveScript : MonoBehaviour
         if (Input.GetKeyUp(crouchKey))
         {
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        }
+
+        if (state == MovementState.sprintingGround)
+        {
+            sprinting = true;
+        }
+        else
+        {
+            sprinting = false;
         }
 
         SpeedControl();
@@ -225,20 +235,30 @@ public class PlayerMoveScript : MonoBehaviour
 
         while (time < diff)
         {
-            moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / diff);
-
-            if (OnSlope())
+            if (!Input.anyKey)
             {
-                float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                float slopeAngleIncrease = 1 + (slopeAngle / 90f);
+                time = diff;
+                rb.velocity = Vector3.zero;
+                moveSpeed = 0;
 
-                time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
             }
             else
             {
-                time += Time.deltaTime * speedIncreaseMultiplier;
-            }        
-            yield return null;
+                moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / diff);
+
+                if (OnSlope())
+                {
+                    float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
+                    float slopeAngleIncrease = 1 + (slopeAngle / 90f);
+
+                    time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
+                }
+                else
+                {
+                    time += Time.deltaTime * speedIncreaseMultiplier;
+                }
+                yield return null;
+            }
         }
         moveSpeed = desiredMoveSpeed;
     }
