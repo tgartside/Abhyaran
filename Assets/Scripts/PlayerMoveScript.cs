@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -24,6 +23,8 @@ public class PlayerMoveScript : MonoBehaviour
     public float airDrag;
 
     public float wallrunSpeed;
+
+    public float swingSpeed;
 
     public Transform orientation;
 
@@ -70,12 +71,14 @@ public class PlayerMoveScript : MonoBehaviour
         sprintingAir,
         crouching,
         sliding,
-        wallrunning
+        wallrunning,
+        grappling
     }
 
     public bool sprinting;
     public bool sliding;
     public bool wallrunning;
+    public bool grappling;
 
     // Start is called before the first frame update
     void Start()
@@ -142,18 +145,29 @@ public class PlayerMoveScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        MovePlayer();
-        Jump();
-        if (!isGrounded && !wallrunning)
+        if (!grappling)
         {
-            FallMultiplier();
-        }  
+            MovePlayer();
+            Jump();
+            if (!isGrounded && !wallrunning)
+            {
+                FallMultiplier();
+            }
+        }
     }
 
     private void StateHandler()
     {
+        // Grappling
+        if (grappling)
+        {
+            state = MovementState.grappling;
+            desiredMoveSpeed = swingSpeed;
+            rb.drag = 0f;
+        }
+
         // Wallrunning
-        if (wallrunning)
+        else if (wallrunning)
         {
             state = MovementState.wallrunning;
             desiredMoveSpeed = wallrunSpeed;
@@ -237,8 +251,7 @@ public class PlayerMoveScript : MonoBehaviour
             if (!Input.anyKey)
             {
                 time = diff;
-                rb.velocity = Vector3.zero;
-                moveSpeed = 0;
+                rb.drag = 500;
 
             }
             else
@@ -264,6 +277,12 @@ public class PlayerMoveScript : MonoBehaviour
 
     private void MovePlayer()
     {
+
+        if (grappling)
+        {
+            return;
+        }
+
         // Calculate player movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         gravity.gravityScale = 2;
