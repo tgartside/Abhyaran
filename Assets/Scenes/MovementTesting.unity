@@ -25529,10 +25529,11 @@ MonoBehaviour:
   grappleSpring: 4.5
   grappleDamper: 7
   grappleMassScale: 4.5
+  maxSwingDistance: 25
   orientation: {fileID: 1109772024}
   rb: {fileID: 1741836704}
   horizontalThrustForce: 2000
-  forwardThrustForce: 3000
+  forwardThrustForce: 5000
   extendRopeSpeed: 20
   predictSphereCastRad: 3
   swingKey: 323

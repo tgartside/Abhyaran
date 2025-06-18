@@ -15,7 +15,7 @@ public class Grapple : MonoBehaviour
     public float grappleSpring = 4.5f;
     public float grappleDamper = 7f;
     public float grappleMassScale = 4.5f;
-    private float maxSwingDistance = 25f;
+    public float maxSwingDistance = 25f;
     private Vector3 swingPoint;
     private Vector3 curGrapplePos;
     private SpringJoint joint;
@@ -63,7 +63,7 @@ public class Grapple : MonoBehaviour
         float distanceFromPoint = Vector3.Distance(player.position, swingPoint);
 
         // Min and max distance from grapple point
-        joint.maxDistance = distanceFromPoint * 0.8f;
+        joint.maxDistance = distanceFromPoint * 0.5f;
         joint.minDistance = distanceFromPoint * 0.25f;
 
         joint.spring = grappleSpring;
@@ -89,7 +89,7 @@ public class Grapple : MonoBehaviour
             return;
         }
 
-        curGrapplePos = Vector3.Lerp(curGrapplePos, predicitonHit.point, Time.deltaTime * 8f);
+        curGrapplePos = Vector3.Lerp(curGrapplePos, predicitonHit.point, Time.deltaTime * 12f);
 
         lr.SetPosition(0, gunTip.position);
         lr.SetPosition(1, curGrapplePos);
@@ -123,7 +123,7 @@ public class Grapple : MonoBehaviour
 
             float distanceFromPoint = Vector3.Distance(transform.position, swingPoint);
 
-            joint.maxDistance = distanceFromPoint * 0.8f;
+            joint.maxDistance = distanceFromPoint * 0.5f;
             joint.minDistance = distanceFromPoint * 0.25f;
         }
 
@@ -132,7 +132,7 @@ public class Grapple : MonoBehaviour
         {
             float extendedDistanceFromPoint = Vector3.Distance(transform.position, swingPoint) + extendRopeSpeed;
 
-            joint.maxDistance = extendedDistanceFromPoint * 0.8f;
+            joint.maxDistance = extendedDistanceFromPoint * 0.5f;
             joint.minDistance = extendedDistanceFromPoint * 0.25f;
         }
     }
