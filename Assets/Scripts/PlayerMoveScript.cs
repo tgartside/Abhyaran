@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -146,12 +145,15 @@ public class PlayerMoveScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        MovePlayer();
-        Jump();
-        if (!isGrounded && !wallrunning)
+        if (!grappling)
         {
-            FallMultiplier();
-        }  
+            MovePlayer();
+            Jump();
+            if (!isGrounded && !wallrunning)
+            {
+                FallMultiplier();
+            }
+        }
     }
 
     private void StateHandler()
@@ -161,6 +163,7 @@ public class PlayerMoveScript : MonoBehaviour
         {
             state = MovementState.grappling;
             desiredMoveSpeed = swingSpeed;
+            rb.drag = 0f;
         }
 
         // Wallrunning
@@ -248,8 +251,7 @@ public class PlayerMoveScript : MonoBehaviour
             if (!Input.anyKey)
             {
                 time = diff;
-                rb.velocity = Vector3.zero;
-                moveSpeed = 0;
+                rb.drag = 500;
 
             }
             else
