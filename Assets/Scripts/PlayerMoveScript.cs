@@ -25,6 +25,8 @@ public class PlayerMoveScript : MonoBehaviour
 
     public float wallrunSpeed;
 
+    public float swingSpeed;
+
     public Transform orientation;
 
     [Header("Sliding Variables")]
@@ -70,12 +72,14 @@ public class PlayerMoveScript : MonoBehaviour
         sprintingAir,
         crouching,
         sliding,
-        wallrunning
+        wallrunning,
+        grappling
     }
 
     public bool sprinting;
     public bool sliding;
     public bool wallrunning;
+    public bool grappling;
 
     // Start is called before the first frame update
     void Start()
@@ -152,8 +156,15 @@ public class PlayerMoveScript : MonoBehaviour
 
     private void StateHandler()
     {
+        // Grappling
+        if (grappling)
+        {
+            state = MovementState.grappling;
+            desiredMoveSpeed = swingSpeed;
+        }
+
         // Wallrunning
-        if (wallrunning)
+        else if (wallrunning)
         {
             state = MovementState.wallrunning;
             desiredMoveSpeed = wallrunSpeed;
@@ -264,6 +275,12 @@ public class PlayerMoveScript : MonoBehaviour
 
     private void MovePlayer()
     {
+
+        if (grappling)
+        {
+            return;
+        }
+
         // Calculate player movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         gravity.gravityScale = 2;
