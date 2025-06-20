@@ -7,10 +7,14 @@ public class InteractorScript : MonoBehaviour
     [SerializeField] private Transform interactionPoint;
     [SerializeField] private float interactionRadius;
     [SerializeField] private LayerMask interactableMask;
+    [SerializeField] private InteractionPromptUI promptUI;
     public KeyCode interactionKey = KeyCode.E;
 
     private readonly Collider[] collisions = new Collider[3];
     [SerializeField] private int numFound;
+
+    private IInteractable interactable;
+    private Outline objectOutline;
 
     private void Update()
     {
@@ -18,11 +22,39 @@ public class InteractorScript : MonoBehaviour
 
         if (numFound > 0)
         {
-            var interactable = collisions[0].GetComponent<IInteractable>();
-
-            if (interactable != null && Input.GetKeyDown(interactionKey)) 
+            interactable = collisions[0].GetComponent<IInteractable>();
+            
+            if (interactable != null)
             {
-                interactable.Interact(this);
+                objectOutline = collisions[0].gameObject.GetComponent<Outline>();
+                objectOutline.enabled = true;
+                //var outline = interactableObject.AddComponent<Outline>();
+                //outline.OutlineMode = Outline.Mode.OutlineAll;
+                //outline.OutlineColor = Color.yellow;
+                objectOutline.OutlineWidth = 20f;
+
+                if (!promptUI.isDisplayed)
+                {
+                    promptUI.SetUp(interactable.InteractionPrompt);
+                    Debug.Log(interactable.InteractionPrompt);
+                }
+                if (Input.GetKeyDown(interactionKey))
+                {
+                    interactable.Interact(this);
+                }
+            }
+        }
+
+        else
+        {
+            if (interactable != null)
+            {
+                interactable = null;
+            }
+            if (promptUI.isDisplayed)
+            {
+                promptUI.Close();
+                objectOutline.enabled = false;
             }
         }
     }
