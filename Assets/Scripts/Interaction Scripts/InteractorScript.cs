@@ -28,9 +28,6 @@ public class InteractorScript : MonoBehaviour
             {
                 objectOutline = collisions[0].gameObject.GetComponent<Outline>();
                 objectOutline.enabled = true;
-                //var outline = interactableObject.AddComponent<Outline>();
-                //outline.OutlineMode = Outline.Mode.OutlineAll;
-                //outline.OutlineColor = Color.yellow;
                 objectOutline.OutlineWidth = 20f;
 
                 if (!promptUI.isDisplayed)
