@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MovementTesting.unity
-    guid: 2c9cd32d745650a4a8d68c7f0d590d9a
+    path: Assets/Scenes/TitleScreen.unity
+    guid: 4a989e6c0c73631458aa6e535cd9db91
+  - enabled: 1
+    path: Assets/Scenes/TerrainTesting.unity
+    guid: dd6c1a9ccbb7ceb4ab994a29d4b63f9d
   m_configObjects: {}
