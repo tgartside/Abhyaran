@@ -33,6 +33,8 @@ public class LogicScript : MonoBehaviour
                 {
                     pauseMenu.SetActive(true);
                     Time.timeScale = 0f;
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
                 }
             }
         }
@@ -40,6 +42,8 @@ public class LogicScript : MonoBehaviour
 
     public void Unpause()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         pauseMenu.SetActive(false);
         Time.timeScale = 1f;
     }
