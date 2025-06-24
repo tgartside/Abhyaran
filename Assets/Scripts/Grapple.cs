@@ -16,8 +16,8 @@ public class Grapple : MonoBehaviour
     public float grappleDamper = 7f;
     public float grappleMassScale = 4.5f;
     public float maxSwingDistance = 25f;
-    private Vector3 swingPoint;
-    private Vector3 curGrapplePos;
+    [SerializeField] private Vector3 swingPoint;
+    [SerializeField] private Vector3 curGrapplePos;
     private SpringJoint joint;
 
     [Header("Air Movement Variables")]

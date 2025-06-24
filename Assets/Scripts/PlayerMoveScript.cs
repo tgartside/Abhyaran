@@ -88,6 +88,8 @@ public class PlayerMoveScript : MonoBehaviour
         rb.freezeRotation = true;
 
         startYScale = transform.localScale.y;
+        desiredMoveSpeed = 0f;
+        moveSpeed = 0f;
     }
 
     // Update is called once per frame
