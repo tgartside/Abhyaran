@@ -11732,7 +11732,7 @@ GameObject:
   - component: {fileID: 3597885283466543758}
   - component: {fileID: 3710306084929276759}
   m_Layer: 0
-  m_Name: delh_arch_02_front_center_pillars_01
+  m_Name: GrappleTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
