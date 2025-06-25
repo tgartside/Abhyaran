@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class usicSwapTrigger : MonoBehaviour
+public class MusicSwapTrigger : MonoBehaviour
 {
     public AudioClip newTrack;
     private AudioManager audioManager;

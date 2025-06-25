@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Note : MonoBehaviour, IInteractable
+public class Trophy : MonoBehaviour, IInteractable
 {
     [SerializeField] private string prompt;
+    [SerializeField] private LogicScript logic;
+
     public string InteractionPrompt => prompt;
     public bool Interact(InteractorScript interactor)
     {
-        Debug.Log(InteractionPrompt);
-        Debug.Log("reading the note");
+        logic.WinGame();
         return true;
     }
 }

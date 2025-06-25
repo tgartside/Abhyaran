@@ -9,10 +9,12 @@ public class LogicScript : MonoBehaviour
 
     [Header("Object References")]
     public GameObject pauseMenu;
+    public GameObject winScreen;
 
     private void Start()
     {
         Application.targetFrameRate = 144;
+        Time.timeScale = 1.0f;
         if (SceneManager.GetActiveScene().name.Equals("TerrainTesting"))
         {
             StartCoroutine(FadeIn());
@@ -46,6 +48,14 @@ public class LogicScript : MonoBehaviour
         Cursor.visible = false;
         pauseMenu.SetActive(false);
         Time.timeScale = 1f;
+    }
+
+    public void WinGame()
+    {
+        winScreen.SetActive(true);
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void StartGame()
