@@ -85,6 +85,7 @@ public class PlayerMoveScript : MonoBehaviour
     {
         gravity = GetComponent<CustomGravity>();
         rb = GetComponent<Rigidbody>();
+        rb.rotation = Quaternion.Euler(0, 90, 0);
         rb.freezeRotation = true;
 
         startYScale = transform.localScale.y;

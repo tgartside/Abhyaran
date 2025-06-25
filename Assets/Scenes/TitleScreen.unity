@@ -28104,9 +28104,17 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -306.3
       objectReference: {fileID: 0}
+    - target: {fileID: 3042621835554425673, guid: 2539f4283071d3c449e4ae12b30da5bd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3934533971794870272, guid: 2539f4283071d3c449e4ae12b30da5bd, type: 3}
       propertyPath: m_Name
       value: TitelScreenUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 7872428457732115763, guid: 2539f4283071d3c449e4ae12b30da5bd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8882163416086531211, guid: 2539f4283071d3c449e4ae12b30da5bd, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
