@@ -35,7 +35,7 @@ public class LogicScript : MonoBehaviour
                 {
                     pauseMenu.SetActive(true);
                     Time.timeScale = 0f;
-                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.lockState = CursorLockMode.Confined;
                     Cursor.visible = true;
                 }
             }
