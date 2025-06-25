@@ -34,13 +34,16 @@ public class Grapple : MonoBehaviour
     [Header("Input")]
     public KeyCode swingKey = KeyCode.Mouse0;
 
+    private void Start()
+    {
+        predicitonHit.point = Vector3.zero;
+    }
 
     private void Update()
     {
+        CheckForGrapplePoints();
         if (Input.GetKeyDown(swingKey)) StartSwing();
         if (Input.GetKeyUp(swingKey)) StopSwing();
-
-        CheckForGrapplePoints();
 
         if(joint != null) AirMovement();
     }

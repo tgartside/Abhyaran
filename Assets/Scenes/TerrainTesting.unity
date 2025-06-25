@@ -29676,7 +29676,7 @@ Transform:
   m_GameObject: {fileID: 647205856}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -19.91153, y: -20.329998, z: -171.5}
+  m_LocalPosition: {x: -19.91153, y: -20.16, z: -171.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -32753,7 +32753,7 @@ Transform:
   m_GameObject: {fileID: 795595726}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.5169269, z: -0, w: 0.85602957}
-  m_LocalPosition: {x: 104.67, y: 24.55, z: -98.2}
+  m_LocalPosition: {x: 104.74, y: 24.55, z: -98.2}
   m_LocalScale: {x: 0.6799799, y: 0.37200317, z: 0.8402499}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -57240,7 +57240,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 363798896946365737, guid: ab82c169b16772b4d85981fb210a1509, type: 3}
       propertyPath: m_Name
-      value: GrappleInstruct (1)
+      value: GrappleInstruct2
       objectReference: {fileID: 0}
     - target: {fileID: 707819622651290435, guid: ab82c169b16772b4d85981fb210a1509, type: 3}
       propertyPath: m_LocalScale.x
@@ -60189,7 +60189,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2726337902669903684, guid: a4f1ee47aaea594419fdb9739c591fc3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 975.43
+      value: 1317.1
       objectReference: {fileID: 0}
     - target: {fileID: 2726337902669903684, guid: a4f1ee47aaea594419fdb9739c591fc3, type: 3}
       propertyPath: m_SizeDelta.y
@@ -64807,21 +64807,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 38399100}
     m_Modifications:
+    - target: {fileID: 975660985502538798, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 975660985502538798, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 975660985502538798, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 975660985502538798, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 975660985502538798, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4074332399339427780, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
       propertyPath: m_LocalScale.x
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4074332399339427780, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
       propertyPath: m_LocalScale.y
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4074332399339427780, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
       propertyPath: m_LocalScale.z
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4074332399339427780, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -67.449326
+      value: -68.35
       objectReference: {fileID: 0}
     - target: {fileID: 4074332399339427780, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
       propertyPath: m_LocalPosition.y
@@ -64829,7 +64849,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4074332399339427780, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.6808167
+      value: -8.94
       objectReference: {fileID: 0}
     - target: {fileID: 4074332399339427780, guid: 02323f354a4cb6343a4c4466e3cabdcb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -65903,7 +65923,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.25
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
