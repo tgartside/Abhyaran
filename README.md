@@ -11,7 +11,7 @@ Shift : Sprint
 
 Space : Jump
 
-Ctrl : Crouc/Slide
+Ctrl : Crouch/Slide
 
 E : Interact
 
