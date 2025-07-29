@@ -1,5 +1,5 @@
 # 3DGR-2025 Project
-Abhyaran is a short platformer game demo made for the 3DGR-2025 microcredential at Uvic
+Abhyaran is a short 3D platformer game demo made in just over a week as part of the 3DGR-2025 microcredential at Uvic.
 
 Itch.io Link: https://owl707.itch.io/abhyaran
 
